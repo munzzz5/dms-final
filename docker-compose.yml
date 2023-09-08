@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  django_gunicorn:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./dms-project/media:/app/media
+      - ./dms-project/staticfiles:/app/staticfiles
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./dms-project/media:/media
+      - ./dms-project/staticfiles:/staticfiles
+    depends_on:
+      - django_gunicorn
